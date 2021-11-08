@@ -1,30 +1,51 @@
 boolean switch_debounce(int inputPin) {
-  int counter = 0;
-  int buttonState = 0;
-  int lastButtonState = 0;
+const int buttonPin = inputPin;    // the number of the pushbutton pin
+//const int ledPin = 13;      // the number of the LED pin
 
-  int currentButtonState = 0;
-  unsigned long lastDebounceTime = 0;
-  unsigned long debounceDelay = 50;
-  
-  currentButtonState = digitalRead(inputPin);
+// Variables will change:
+int ledState = HIGH;         // the current state of the output pin
+int buttonState;             // the current reading from the input pin
+int lastButtonState = LOW;   // the previous reading from the input pin
 
-  if (currentButtonState != lastButtonState) {
+// the following variables are unsigned longs because the time, measured in
+// milliseconds, will quickly become a bigger number than can be stored in an int.
+unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+unsigned long debounceDelay = 50;  
+
+  int reading = digitalRead(buttonPin);
+
+  // check to see if you just pressed the button
+  // (i.e. the input went from LOW to HIGH), and you've waited long enough
+  // since the last press to ignore any noise:
+
+  // If the switch changed, due to noise or pressing:
+  if (reading != lastButtonState) {
+    // reset the debouncing timer
     lastDebounceTime = millis();
   }
 
   if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (currentButtonState != buttonState) {
-      buttonState = currentButtonState;
-      if (buttonState == LOW) {
-        counter++;
-        //Serial.println(counter);
+    // whatever the reading is at, it's been there for longer than the debounce
+    // delay, so take it as the actual current state:
+
+    // if the button state has changed:
+    if (reading != buttonState) {
+      buttonState = reading;
+
+      // only toggle the LED if the new button state is HIGH
+      if (buttonState == HIGH) {
+        ledState = !ledState;
       }
     }
   }
-  Serial.println("switch = %d, read = %d", inputPin, currentButtonState);
-  lastButtonState = currentButtonState;
-  return currentButtonState;
+
+  // set the LED:
+  //digitalWrite(ledPin, ledState);
+
+  // save the reading. Next time through the loop, it'll be the lastButtonState:
+  lastButtonState = reading;
+  return ledState;
+
 }
 
 
@@ -69,13 +90,13 @@ void loop() {
     signalCode=0;
   }*/
 
-  if(switch_debounce(red)) {
+  if(switch_debounce(red) == 1) {
     signalCode = 2;
   }
-  if(switch_debounce(yellow)) {
+  if(switch_debounce(yellow) == 1) {
     signalCode = 3;
   }
-  if(switch_debounce(green)) {
+  if(switch_debounce(green) == 1) {
     signalCode = 4;
   }
   else signalCode = 0;
