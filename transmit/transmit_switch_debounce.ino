@@ -21,7 +21,7 @@ void setup() {
   pinMode(green, INPUT);
   pinMode(maestro, INPUT);
 
-  Serial.println(radio.getPAlevel());
+  Serial.println(radio.getPAlevel()); // stats for debug remove if not needed
   Serial.println(radio.getDataRate());
   delay(2000);
 }
@@ -30,11 +30,43 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   //char text[]="Hello Rimo";
-  
+ 
   //radio.write(&text,sizeof(text));
   // red = 2,yellow=3,green=4//
 
- 
+  /* if(switch_debounce(red)==HIGH){
+     signalCode=2;
+     if (switch_debounce(green)==HIGH){
+       OFF();
+       signalCode = 4;
+       }
+     else if (switch_debounce(yellow)==HIGH){
+       OFF();
+       signalCode = 3;
+       }
+
+    }else if(switch_debounce(yellow)==HIGH){
+     signalCode=3;
+     if (switch_debounce(green)==HIGH){
+       OFF();
+       signalCode = 4;
+       }
+     else if (switch_debounce(red)==HIGH){
+       OFF();
+       signalCode = 2;
+       }
+    }else if(switch_debounce(green)==HIGH){
+     signalCode=4;
+     if (switch_debounce(yellow)==HIGH){
+       OFF();
+       signalCode = 3;
+       }
+     else if (switch_debounce(red)==HIGH){
+       OFF();
+       signalCode = 2;
+       }
+    }*/
+
   if (digitalRead(maestro) == HIGH ) {
     button = 0;
   }
@@ -68,6 +100,6 @@ void loop() {
 
 
 
-  delay(10);
+  //delay(1000);
 
 }
